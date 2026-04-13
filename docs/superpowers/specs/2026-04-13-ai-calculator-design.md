@@ -16,9 +16,10 @@
 5. [技术栈](#技术栈)
 6. [数据结构](#数据结构)
 7. [状态管理](#状态管理)
-8. [国际化设计](#国际化设计)
-9. [SEO策略](#seo策略)
-10. [实施路线图](#实施路线图)
+8. [响应式设计](#响应式设计)
+9. [国际化设计](#国际化设计)
+10. [SEO策略](#seo策略)
+11. [实施路线图](#实施路线图)
 
 ---
 
@@ -409,7 +410,23 @@ interface FormattedResult {
 
 ## 技术栈
 
-### 前端
+### Monorepo架构
+
+项目采用**前后端分离**的多仓架构：
+
+```
+orange-calculator/
+├── apps/
+│   ├── web/                    # Next.js前端项目
+│   └── api/                    # 后端API项目
+├── packages/
+│   ├── shared/                 # 共享类型和工具
+│   ├── calculators/            # 计算器协议和实现
+│   └── ui/                     # 共享UI组件
+└── package.json
+```
+
+### 前端（apps/web）
 
 - **框架**: Next.js 14 (App Router)
 - **UI库**: React 18
@@ -418,25 +435,43 @@ interface FormattedResult {
 - **状态管理**: React Context API
 - **表单**: React Hook Form + Zod
 - **Markdown**: react-markdown
-- **图表**: Recharts / Chart.js
+- **图表**: Recharts
+- **响应式**: Tailwind响应式工具类
+- **部署**: Vercel
 
-### 后端
+### 后端（apps/api）
 
-- **API**: Next.js API Routes
+- **框架**: NestJS (Node.js)
+- **语言**: TypeScript
+- **API**: RESTful API
 - **AI服务**:
   - 规则引擎: 自定义
   - 小模型: GPT-4o-mini ($0.15/1M tokens)
   - 大模型: Claude 3.5 Sonnet (付费功能)
-- **数据库**: PostgreSQL (Supabase)
-- **缓存**: Redis (Upstash)
-- **文件存储**: 本地文件系统 + CDN
+- **数据库**: PostgreSQL
+- **缓存**: Redis
+- **认证**: JWT + Passport
+- **部署**: Railway / Render / AWS
 
 ### 部署
 
-- **前端**: Vercel
-- **数据库**: Supabase
-- **缓存**: Upstash
+**前端部署（apps/web）**
+- **平台**: Vercel
 - **域名**: orange.com
+- **CDN**: Vercel Edge Network
+- **环境变量**: API_URL, NEXT_PUBLIC_SITE_URL
+
+**后端部署（apps/api）**
+- **平台**: Railway / Render / AWS
+- **域名**: api.orange.com
+- **数据库**: PostgreSQL (托管)
+- **缓存**: Redis (托管)
+- **环境变量**: DATABASE_URL, REDIS_URL, OPENAI_API_KEY
+
+**CI/CD**
+- GitHub Actions自动部署
+- 推送到main分支自动触发
+- 前后端独立部署流程
 
 ### 开发工具
 
@@ -450,68 +485,121 @@ interface FormattedResult {
 
 ## 数据结构
 
-### 目录结构
+### Monorepo目录结构
 
 ```
-orange-calculator/
-├── calculators/                  # 计算器模块
-│   ├── bmi-calculator/
-│   │   ├── protocol.ts           # 协议配置
-│   │   ├── calculation.ts        # 计算逻辑
-│   │   ├── content/
-│   │   │   └── index.ts          # 内容节点
-│   │   ├── components/           # React组件
-│   │   │   ├── BMICalculatorForm.tsx
-│   │   │   ├── BMIChart.tsx
-│   │   │   ├── BMIGauge.tsx
-│   │   │   └── BMIInterpretation.tsx
-│   │   └── variants/
-│   │       ├── en.json           # 英语本地化
-│   │       └── zh.json           # 中文本地化
+orange-calculator/                      # Monorepo根目录
+├── apps/
+│   ├── web/                            # Next.js前端
+│   │   ├── app/
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── calculators/
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── [calculator]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── [locale]/
+│   │   │   │   └── calculators/
+│   │   │   │       └── [calculator]/
+│   │   │   │           └── page.tsx
+│   │   │   └── chat/
+│   │   │       └── page.tsx
+│   │   ├── components/
+│   │   │   ├── ContentRenderer.tsx
+│   │   │   ├── CalculatorCard.tsx
+│   │   │   ├── LanguageSwitcher.tsx
+│   │   │   └── AIAssistant.tsx
+│   │   ├── contexts/
+│   │   │   └── CalculatorContext.tsx
+│   │   ├── lib/
+│   │   │   └── api-client.ts          # API客户端
+│   │   ├── public/
+│   │   ├── next.config.js
+│   │   ├── tailwind.config.ts
+│   │   └── package.json
 │   │
-│   ├── mortgage-calculator/
-│   │   └── ...
+│   └── api/                            # NestJS后端
+│       ├── src/
+│       │   ├── modules/
+│       │   │   ├── ai/
+│       │   │   │   ├── ai.service.ts
+│       │   │   │   ├── ai.controller.ts
+│       │   │   │   ├── rule-engine.service.ts
+│       │   │   │   └── llm-client.service.ts
+│       │   │   ├── calculators/
+│       │   │   │   ├── calculators.service.ts
+│       │   │   │   ├── calculators.controller.ts
+│       │   │   │   └── dto/
+│       │   │   ├── users/
+│       │   │   │   ├── users.service.ts
+│       │   │   │   ├── users.controller.ts
+│       │   │   │   └── dto/
+│       │   │   └── subscriptions/
+│       │   │       ├── subscriptions.service.ts
+│       │   │       └── subscriptions.controller.ts
+│       │   ├── common/
+│       │   │   ├── guards/
+│       │   │   ├── interceptors/
+│       │   │   └── filters/
+│       │   ├── database/
+│       │   │   ├── migrations/
+│       │   │   └── seeds/
+│       │   └── main.ts
+│       ├── test/
+│       ├── .env.example
+│       ├── nest-cli.json
+│       ├── tsconfig.json
+│       └── package.json
+│
+├── packages/
+│   ├── shared/                        # 共享类型和工具
+│   │   ├── src/
+│   │   │   ├── types/
+│   │   │   │   ├── calculator.types.ts
+│   │   │   │   ├── user.types.ts
+│   │   │   │   └── api.types.ts
+│   │   │   ├── utils/
+│   │   │   │   └── helpers.ts
+│   │   │   └── index.ts
+│   │   ├── package.json
+│   │   └── tsconfig.json
 │   │
-│   └── index.ts                  # 计算器注册表
+│   ├── calculators/                   # 计算器协议和实现
+│   │   ├── src/
+│   │   │   ├── bmi-calculator/
+│   │   │   │   ├── protocol.ts
+│   │   │   │   ├── calculation.ts
+│   │   │   │   ├── content/
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── components/
+│   │   │   │   │   ├── BMICalculatorForm.tsx
+│   │   │   │   │   ├── BMIChart.tsx
+│   │   │   │   │   ├── BMIGauge.tsx
+│   │   │   │   │   └── BMIInterpretation.tsx
+│   │   │   │   └── variants/
+│   │   │   │       ├── en.json
+│   │   │   │       └── zh.json
+│   │   │   ├── mortgage-calculator/
+│   │   │   │   └── ...
+│   │   │   └── index.ts               # 计算器注册表
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   └── ui/                             # 共享UI组件
+│       ├── src/
+│       │   ├── components/
+│       │   │   ├── Button/
+│       │   │   ├── Input/
+│       │   │   ├── Card/
+│       │   │   ├── Modal/
+│       │   │   └── Form/
+│       │   ├── styles/
+│       │   │   └── globals.css
+│       │   └── index.ts
+│       ├── package.json
+│       └── tsconfig.json
 │
-├── contexts/                     # React Context
-│   └── CalculatorContext.tsx
-│
-├── components/                   # 共享组件
-│   ├── ContentRenderer.tsx
-│   ├── CalculatorCard.tsx
-│   ├── LanguageSwitcher.tsx
-│   └── AIAssistant.tsx
-│
-├── app/                          # Next.js App Router
-│   ├── layout.tsx
-│   ├── page.tsx                  # 首页
-│   ├── calculators/
-│   │   ├── page.tsx              # 计算器列表
-│   │   └── [calculator]/
-│   │       └── page.tsx          # 计算器详情页
-│   ├── [locale]/
-│   │   └── calculators/
-│   │       └── [calculator]/
-│   │           └── page.tsx      # 国际化路由
-│   ├── api/
-│   │   ├── ai/
-│   │   │   ├── extract/route.ts
-│   │   │   └── recommend/route.ts
-│   │   └── calculators/
-│   │       └── [id]/route.ts
-│   └── chat/
-│       └── page.tsx              # AI聊天页面
-│
-├── lib/                          # 工具函数
-│   ├── ai/
-│   │   ├── rule-engine.ts        # 规则引擎
-│   │   ├── llm-client.ts         # LLM客户端
-│   │   └── prompt-templates.ts   # 提示词模板
-│   ├── calculator-registry.ts    # 计算器注册表
-│   └── utils.ts
-│
-├── locales/                      # 国际化内容
+├── locales/                            # 国际化内容
 │   ├── en/
 │   │   ├── common.json
 │   │   └── calculators/
@@ -522,24 +610,45 @@ orange-calculator/
 │   │               ├── introduction.md
 │   │               ├── formula.md
 │   │               └── faq.md
-│   │
 │   └── zh/
 │       └── ...
 │
-├── public/                       # 静态资源
-│   ├── images/
-│   └── icons/
-│
-├── docs/                         # 文档
+├── docs/                               # 文档
 │   └── superpowers/specs/
 │       └── 2026-04-13-ai-calculator-design.md
 │
-├── next.config.js
-├── tailwind.config.ts
-├── tsconfig.json
-├── package.json
+├── package.json                        # Monorepo根配置
+├── pnpm-workspace.yaml
+├── turbo.json                          # Turborepo配置
+├── .gitignore
 └── README.md
 ```
+
+### Monorepo工具链
+
+- **包管理器**: pnpm workspaces
+- **构建工具**: Turborepo
+- **语言**: TypeScript
+- **代码质量**: ESLint + Prettier
+- **测试**: Jest (单元测试) + Playwright (E2E测试)
+- **版本控制**: Git + GitHub
+
+### 通信流程
+
+```
+前端（Next.js）
+    ↓ HTTP/REST API
+后端（NestJS）
+    ↓
+共享包（@org/calculators）
+    ↓
+计算器协议和逻辑
+```
+
+前端通过REST API调用后端，两者都依赖共享的`packages`：
+- `@org/shared` - 类型定义
+- `@org/calculators` - 计算器协议
+- `@org/ui` - UI组件库
 
 ### 计算器注册表
 
@@ -679,6 +788,370 @@ calculate() 执行计算
 setResult() 更新 Context
     ↓
 所有组件更新（图表、仪表盘、建议）
+```
+
+---
+
+## 响应式设计
+
+### 设计原则
+
+**移动优先（Mobile First）**
+- 从最小屏幕（320px）开始设计
+- 逐步增强到平板（768px）和桌面（1024px+）
+- 确保核心功能在所有设备可用
+
+**断点系统**
+
+```typescript
+// tailwind.config.ts
+export default {
+  theme: {
+    screens: {
+      'sm': '640px',   // 手机横屏
+      'md': '768px',   // 平板
+      'lg': '1024px',  // 桌面
+      'xl': '1280px',  // 大桌面
+      '2xl': '1536px', // 超大屏
+    },
+  },
+};
+```
+
+### 响应式布局策略
+
+#### 1. 计算器页面布局
+
+**移动端（< 768px）**
+```
+┌─────────────────┐
+│  Header (汉堡菜单)│
+├─────────────────┤
+│                 │
+│  标题 + 描述     │
+│                 │
+├─────────────────┤
+│  表单（竖向）    │
+│  ┌───────────┐  │
+│  │  字段1    │  │
+│  └───────────┘  │
+│  ┌───────────┐  │
+│  │  字段2    │  │
+│  └───────────┘  │
+│  [计算按钮]     │
+├─────────────────┤
+│  结果区域       │
+│  (横向滚动图表)  │
+├─────────────────┤
+│  内容章节       │
+│  (折叠式)       │
+└─────────────────┘
+```
+
+**桌面端（≥ 1024px）**
+```
+┌─────────────────────────────────────────┐
+│  Header (导航菜单)                       │
+├─────────────────────────────────────────┤
+│                                         │
+│  标题 + 描述                             │
+│                                         │
+├──────────────────┬──────────────────────┤
+│                  │                      │
+│  表单（左侧）     │  内容（右侧）        │
+│  ┌─────────┐     │  • 公式说明          │
+│  │ 字段1   │     │  • 使用指南          │
+│  ├─────────┤     │  • FAQ              │
+│  │ 字段2   │     │                      │
+│  └─────────┘     │                      │
+│  [计算]          │                      │
+│                  │                      │
+│  结果预览        │                      │
+│  ┌─────────┐     │                      │
+│  │ BMI: 22.9│    │                      │
+│  └─────────┘     │                      │
+│                  │                      │
+└──────────────────┴──────────────────────┘
+```
+
+#### 2. 代码实现
+
+```tsx
+// apps/web/app/calculators/[calculator]/page.tsx
+
+export default function CalculatorPage({ params }) {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - 响应式 */}
+      <header className="sticky top-0 z-50 bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl md:text-2xl font-bold">BMI Calculator</h1>
+            <nav className="hidden md:flex space-x-6">
+              {/* 桌面端导航 */}
+            </nav>
+            <button className="md:hidden">
+              {/* 移动端汉堡菜单 */}
+              <MenuIcon />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content - 响应式网格 */}
+      <main className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* 左侧：表单和结果 */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* 计算器表单 */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <CalculatorForm />
+            </div>
+
+            {/* 结果卡片 */}
+            {result && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <CalculatorResult result={result} />
+              </div>
+            )}
+          </div>
+
+          {/* 右侧：内容章节 */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* 移动端：可折叠 */}
+            <div className="lg:hidden">
+              <Collapsible sections={contentSections} />
+            </div>
+
+            {/* 桌面端：直接显示 */}
+            <div className="hidden lg:block">
+              <ContentRenderer nodes={contentNodes} />
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-8 mt-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm">© 2026 Orange Calculator. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+```
+
+#### 3. 响应式表单组件
+
+```tsx
+// packages/ui/src/components/Form/index.tsx
+
+export function ResponsiveForm({ fields, onSubmit }) {
+  return (
+    <form onSubmit={onSubmit} className="space-y-4">
+      {fields.map((field) => (
+        <div key={field.name} className="space-y-2">
+          <label
+            className={cn(
+              "block text-sm font-medium",
+              "md:text-base"  // 桌面端字体稍大
+            )}
+          >
+            {field.label}
+          </label>
+
+          {field.type === 'select' ? (
+            <select
+              className={cn(
+                "w-full px-3 py-2 border rounded-lg",
+                "focus:ring-2 focus:ring-blue-500",
+                "text-sm md:text-base"  // 响应式字体
+              )}
+            >
+              {field.options?.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type={field.type}
+              className={cn(
+                "w-full px-3 py-2 border rounded-lg",
+                "focus:ring-2 focus:ring-blue-500",
+                "text-sm md:text-base"
+              )}
+              placeholder={field.placeholder}
+            />
+          )}
+
+          {field.unit && (
+            <span className="text-xs md:text-sm text-gray-500">
+              {field.unit}
+            </span>
+          )}
+        </div>
+      ))}
+
+      <button
+        type="submit"
+        className={cn(
+          "w-full py-3 px-4 rounded-lg font-medium",
+          "bg-blue-600 text-white",
+          "hover:bg-blue-700",
+          "transition-colors",
+          "text-sm md:text-base",  // 响应式字体
+          "md:w-auto md:px-8"     // 桌面端宽度自适应
+        )}
+      >
+        Calculate
+      </button>
+    </form>
+  );
+}
+```
+
+#### 4. 响应式图表组件
+
+```tsx
+// packages/calculators/src/bmi-calculator/components/BMIChart.tsx
+
+import { GaugeChart } from '@/ui/components/GaugeChart';
+
+export function BMIChart({ value }) {
+  return (
+    <div className="w-full">
+      {/* 移动端：较小尺寸 */}
+      <div className="lg:hidden">
+        <GaugeChart
+          value={value}
+          size="small"        // 300px
+          showLabels={false}  // 省略标签
+        />
+      </div>
+
+      {/* 桌面端：较大尺寸 */}
+      <div className="hidden lg:block">
+        <GaugeChart
+          value={value}
+          size="large"        // 500px
+          showLabels={true}   // 显示标签
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+#### 5. 响应式内容渲染
+
+```tsx
+// packages/ui/src/components/ContentRenderer/index.tsx
+
+export function ContentRenderer({ nodes }) {
+  return (
+    <article className="prose prose-sm md:prose lg:prose-lg max-w-none">
+      {nodes.map((node, index) => {
+        if (node.type === 'markdown') {
+          return (
+            <div
+              key={index}
+              className="markdown-content"
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(node.content) }}
+            />
+          );
+        }
+
+        if (node.type === 'component') {
+          const Component = node.component;
+          return (
+            <div key={index} className="my-6 md:my-8">
+              <Component {...(node.props || {})} />
+            </div>
+          );
+        }
+
+        return null;
+      })}
+    </article>
+  );
+}
+```
+
+### 触摸优化
+
+**移动端交互优化**
+
+```tsx
+// 增大触摸目标（最小44x44px）
+<button className="min-h-[44px] min-w-[44px] px-4 py-2">
+  Calculate
+</button>
+
+// 防止误触
+<button className="touch-manipulation">
+  Click Me
+</button>
+
+// 响应式间距
+<div className="space-y-2 md:space-y-4">
+  {/* 移动端间距小，桌面端间距大 */}
+</div>
+```
+
+### 性能优化
+
+**图片优化**
+```tsx
+import Image from 'next/image';
+
+<Image
+  src="/bmi-chart.png"
+  alt="BMI Chart"
+  width={800}
+  height={600}
+  className="w-full h-auto"
+  priority={false}  // 懒加载
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+/>
+```
+
+**代码分割**
+```tsx
+import dynamic from 'next/dynamic';
+
+// 动态导入重型组件
+const HeavyChart = dynamic(() => import('./HeavyChart'), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,  // 客户端渲染
+});
+```
+
+### 测试策略
+
+**跨设备测试**
+- 真机测试：iPhone SE, iPhone 14 Pro, iPad Pro
+- 浏览器测试：Chrome DevSim, Responsive Design Mode
+- 自动化测试：Playwright E2E测试多设备
+
+```typescript
+// tests/e2e/calculator.spec.ts
+
+test('BMI calculator on mobile', async ({ page }) => {
+  // 模拟移动设备
+  await page.setViewportSize({ width: 375, height: 667 });
+
+  await page.goto('/calculators/bmi-calculator');
+  await page.fill('input[name="height"]', '175');
+  await page.fill('input[name="weight"]', '70');
+  await page.click('button[type="submit"]');
+
+  // 验证响应式布局
+  const form = page.locator('.calculator-form');
+  await expect(form).toHaveCSS('flex-direction', 'column');
+});
 ```
 
 ---
@@ -964,13 +1437,15 @@ async function loadCalculator(id: string, locale: string) {
 
 | 项目 | 成本 | 说明 |
 |------|------|------|
+| 前端托管（Vercel Pro） | $20 | Next.js前端 |
+| 后端托管（Railway） | $20 | NestJS后端 |
+| 数据库（PostgreSQL） | $25 | 托管数据库 |
+| 缓存（Redis） | $10 | 托管Redis |
 | LLM API（免费层） | $60 | 1000次/天 × $0.001 |
 | LLM API（付费层） | $30 | 100次/天 × $0.01 |
-| 服务器（Vercel） | $20 | Pro计划 |
-| 数据库（Supabase） | $25 | Pro计划 |
-| 缓存（Upstash） | $10 | Basic计划 |
 | 域名和CDN | $15 | 域名+带宽 |
-| **总计** | **$160/月** | |
+| 监控和日志 | $10 | Sentry等 |
+| **总计** | **$190/月** | |
 
 ### 收入预测
 
