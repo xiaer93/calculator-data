@@ -17,11 +17,3 @@
     @apply m-0 min-h-screen bg-gray-50 text-gray-900;
   }
 }
-
-@layer components {
-  /* Custom utility classes can be added here */
-}
-
-@layer utilities {
-  /* Custom utility functions can be added here */
-}

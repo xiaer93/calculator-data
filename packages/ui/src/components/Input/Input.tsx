@@ -5,14 +5,12 @@ import { twMerge } from 'tailwind-merge';
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
-  helperText?: string;
   fullWidth?: boolean;
 }
 
 export const Input: React.FC<InputProps> = ({
   label,
   error,
-  helperText,
   fullWidth = false,
   className,
   id,
@@ -20,7 +18,6 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
   const errorId = `${inputId}-error`;
-  const helperId = `${inputId}-helper`;
 
   const baseStyles = 'block rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed';
   const errorStyles = error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : '';
@@ -50,9 +47,7 @@ export const Input: React.FC<InputProps> = ({
       <input
         id={inputId}
         aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={
-          error ? errorId : helperText ? helperId : undefined
-        }
+        aria-describedby={error ? errorId : undefined}
         className={mergedClassName}
         {...props}
       />
@@ -60,12 +55,6 @@ export const Input: React.FC<InputProps> = ({
       {error && (
         <p id={errorId} className="mt-1 text-sm text-red-600">
           {error}
-        </p>
-      )}
-
-      {helperText && !error && (
-        <p id={helperId} className="mt-1 text-sm text-gray-500">
-          {helperText}
         </p>
       )}
     </div>
