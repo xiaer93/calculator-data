@@ -430,13 +430,13 @@ orange-calculator/
 
 - **框架**: Next.js 14 (App Router)
 - **UI库**: React 18
-- **样式**: Tailwind CSS
-- **组件**: shadcn/ui
+- **样式**: Tailwind CSS（核心样式库）
+- **组件库**: shadcn/ui（基于 Tailwind 的组件库）
 - **状态管理**: React Context API
 - **表单**: React Hook Form + Zod
 - **Markdown**: react-markdown
 - **图表**: Recharts
-- **响应式**: Tailwind响应式工具类
+- **响应式**: Tailwind 响应式工具类
 - **部署**: Vercel
 
 ### 后端（apps/api）
@@ -794,6 +794,92 @@ setResult() 更新 Context
 
 ## 响应式设计
 
+### Tailwind CSS 配置
+
+**安装 Tailwind CSS**
+
+```bash
+# 在 apps/web 目录下
+pnpm add -D tailwindcss postcss autoprefixer
+pnpm tailwindcss init -p
+```
+
+**基础配置**
+
+```typescript
+// apps/web/tailwind.config.ts
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    '../../packages/ui/src/**/*.{js,ts,jsx,tsx}',  // 共享UI组件
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+        },
+      },
+      screens: {
+        // PC优先设计
+        // 默认（PC端）: ≥ 768px
+        'max-md': { max: '767px' },  // 移动端
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'),  // prose 类用于Markdown
+  ],
+}
+
+export default config
+```
+
+**全局样式**
+
+```css
+/* apps/web/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  /* 自定义组件样式 */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow;
+  }
+}
+```
+
 ### 设计原则
 
 **PC优先（Desktop First）**
@@ -819,6 +905,16 @@ export default {
 - 默认样式：PC端
 - `max-md:` 前缀：移动端样式
 - 示例：`className="text-base max-md:text-sm"`（PC端正常字，移动端小字）
+
+**常用 Tailwind 类名**
+
+| 用途 | PC端 | 移动端 |
+|------|------|--------|
+| 字体大小 | `text-base` | `max-md:text-sm` |
+| 间距 | `p-8` | `max-md:p-6` |
+| 布局 | `md:grid-cols-2` | `grid-cols-1`（默认） |
+| 显示/隐藏 | `max-md:hidden` | `hidden md:block` |
+| 容器宽度 | `max-w-4xl` | `max-w-full` |
 
 ### 响应式布局策略
 
