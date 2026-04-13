@@ -854,20 +854,28 @@ export default {
 │  Header (导航菜单)                       │
 ├─────────────────────────────────────────┤
 │  标题 + 描述                             │
-├──────────────────┬──────────────────────┤
-│  表单 + 结果      │  内容（右侧）        │
-│  （左侧）         │  • 公式说明          │
-│  ┌─────────┐     │  • 使用指南          │
-│  │ 字段1   │     │  • FAQ              │
-│  ├─────────┤     │                      │
-│  │ 字段2   │     │                      │
-│  └─────────┘     │                      │
-│  [计算]          │                      │
-│  ┌─────────┐     │                      │
-│  │ BMI: 22.9│    │                      │
-│  └─────────┘     │                      │
-└──────────────────┴──────────────────────┘
+├─────────────────────────────────────────┤
+│  表单（竖向）                            │
+│  ┌─────────┐ ┌─────────┐               │
+│  │ 字段1   │ │ 字段2   │  (多列横向)     │
+│  └─────────┘ └─────────┘               │
+│  [计算按钮]                             │
+├─────────────────────────────────────────┤
+│  结果区域                                │
+│  (大尺寸图表)                            │
+├─────────────────────────────────────────┤
+│  内容章节                                │
+│  • 公式说明                              │
+│  • 使用指南                              │
+│  • FAQ                                  │
+└─────────────────────────────────────────┘
 ```
+
+**布局特点**
+- ✅ 全竖向布局，无左右分栏
+- ✅ PC端表单字段可以横向排列（2-3列）
+- ✅ 移动端表单字段全部竖向
+- ✅ 内容区域全部竖向排列
 
 #### 2. 代码实现
 
@@ -893,35 +901,30 @@ export default function CalculatorPage({ params }) {
         </div>
       </header>
 
-      {/* Main Content - 响应式网格 */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* 左侧：表单和结果 */}
-          <div className="md:col-span-1 space-y-6">
-            {/* 计算器表单 */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <CalculatorForm />
-            </div>
+      {/* Main Content - 全竖向布局 */}
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* 计算器表单 */}
+        <div className="bg-white rounded-lg shadow p-6 md:p-8 mb-8">
+          <CalculatorForm />
+        </div>
 
-            {/* 结果卡片 */}
-            {result && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <CalculatorResult result={result} />
-              </div>
-            )}
+        {/* 结果卡片 */}
+        {result && (
+          <div className="bg-white rounded-lg shadow p-6 md:p-8 mb-8">
+            <CalculatorResult result={result} />
+          </div>
+        )}
+
+        {/* 内容章节 */}
+        <div className="space-y-8">
+          {/* PC端：直接显示（默认） */}
+          <div className="max-md:hidden">
+            <ContentRenderer nodes={contentNodes} />
           </div>
 
-          {/* 右侧：内容章节 */}
-          <div className="md:col-span-2 space-y-8">
-            {/* PC端：直接显示（默认） */}
-            <div className="max-md:hidden">
-              <ContentRenderer nodes={contentNodes} />
-            </div>
-
-            {/* 移动端：可折叠 */}
-            <div className="hidden max-md:block">
-              <Collapsible sections={contentSections} />
-            </div>
+          {/* 移动端：可折叠 */}
+          <div className="hidden max-md:block">
+            <Collapsible sections={contentSections} />
           </div>
         </div>
       </main>
@@ -945,59 +948,62 @@ export default function CalculatorPage({ params }) {
 export function ResponsiveForm({ fields, onSubmit }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      {fields.map((field) => (
-        <div key={field.name} className="space-y-2">
-          <label
-            className={cn(
-              "block text-base font-medium",
-              "max-md:text-sm"  // 移动端字体稍小
-            )}
-          >
-            {field.label}
-          </label>
-
-          {field.type === 'select' ? (
-            <select
+      {/* PC端：字段横向排列（2列），移动端：竖向 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {fields.map((field) => (
+          <div key={field.name} className="space-y-2">
+            <label
               className={cn(
-                "w-full px-3 py-2 border rounded-lg",
-                "focus:ring-2 focus:ring-blue-500",
-                "text-base max-md:text-sm"  // PC端正常，移动端小字
+                "block text-base font-medium",
+                "max-md:text-sm"  // 移动端字体稍小
               )}
             >
-              {field.options?.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              type={field.type}
-              className={cn(
-                "w-full px-3 py-2 border rounded-lg",
-                "focus:ring-2 focus:ring-blue-500",
-                "text-base max-md:text-sm"
-              )}
-              placeholder={field.placeholder}
-            />
-          )}
+              {field.label}
+            </label>
 
-          {field.unit && (
-            <span className="text-sm max-md:text-xs text-gray-500">
-              {field.unit}
-            </span>
-          )}
-        </div>
-      ))}
+            {field.type === 'select' ? (
+              <select
+                className={cn(
+                  "w-full px-3 py-2 border rounded-lg",
+                  "focus:ring-2 focus:ring-blue-500",
+                  "text-base max-md:text-sm"
+                )}
+              >
+                {field.options?.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={field.type}
+                className={cn(
+                  "w-full px-3 py-2 border rounded-lg",
+                  "focus:ring-2 focus:ring-blue-500",
+                  "text-base max-md:text-sm"
+                )}
+                placeholder={field.placeholder}
+              />
+            )}
+
+            {field.unit && (
+              <span className="text-sm max-md:text-xs text-gray-500">
+                {field.unit}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
 
       <button
         type="submit"
         className={cn(
-          "w-auto py-3 px-8 rounded-lg font-medium",
+          "w-full py-3 px-8 rounded-lg font-medium",
           "bg-blue-600 text-white",
           "hover:bg-blue-700",
           "transition-colors",
-          "text-base max-md:text-sm max-md:w-full"  // PC端自适应，移动端全宽
+          "text-base max-md:text-sm"  // 全宽按钮
         )}
       >
         Calculate
@@ -1142,9 +1148,16 @@ test('BMI calculator on mobile', async ({ page }) => {
   await page.fill('input[name="weight"]', '70');
   await page.click('button[type="submit"]');
 
-  // 验证响应式布局（移动端）
-  const form = page.locator('.calculator-form');
+  // 验证响应式布局（移动端 - 竖向布局）
+  const form = page.locator('form');
   await expect(form).toBeVisible();
+
+  // 验证字段是竖向排列
+  const field1 = page.locator('input[name="height"]');
+  const field2 = page.locator('input[name="weight"]');
+  const field1Box = await field1.boundingBox();
+  const field2Box = await field2.boundingBox();
+  expect(field2Box.y).toBeGreaterThan(field1Box.y); // field2在field1下方
 });
 
 test('BMI calculator on PC', async ({ page }) => {
@@ -1153,9 +1166,13 @@ test('BMI calculator on PC', async ({ page }) => {
 
   await page.goto('/calculators/bmi-calculator');
 
-  // 验证PC端布局（双列）
+  // 验证PC端布局（竖向布局）
+  const container = page.locator('main');
+  await expect(container).toHaveClass(/max-w-4xl/); // 居中容器
+
+  // 验证字段是横向排列（2列）
   const grid = page.locator('.grid');
-  await expect(grid).toHaveClass(/md:grid-cols-3/);
+  await expect(grid).toHaveClass(/md:grid-cols-2/);
 });
 ```
 
