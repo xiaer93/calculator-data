@@ -1,40 +1,22 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  fullWidth?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({
+export function Input({
   label,
   error,
-  fullWidth = false,
   className,
   id,
   ...props
-}) => {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
-  const errorId = `${inputId}-error`;
-
-  const baseStyles = 'block rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed';
-  const errorStyles = error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : '';
-  const widthStyles = fullWidth ? 'w-full' : '';
-
-  const mergedClassName = twMerge(
-    clsx(
-      baseStyles,
-      errorStyles,
-      widthStyles,
-      'px-3 py-2 text-base',
-      className
-    )
-  );
+}: InputProps) {
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
   return (
-    <div className={fullWidth ? 'w-full' : ''}>
+    <div className="w-full">
       {label && (
         <label
           htmlFor={inputId}
@@ -43,20 +25,23 @@ export const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-
       <input
         id={inputId}
-        aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={error ? errorId : undefined}
-        className={mergedClassName}
+        className={clsx(
+          'w-full px-3 py-2 border rounded-lg',
+          'focus:outline-none focus:ring-2 focus:ring-blue-500',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
+          {
+            'border-red-500 focus:ring-red-500': error,
+            'border-gray-300': !error,
+          },
+          className
+        )}
         {...props}
       />
-
       {error && (
-        <p id={errorId} className="mt-1 text-sm text-red-600">
-          {error}
-        </p>
+        <p className="mt-1 text-sm text-red-600">{error}</p>
       )}
     </div>
   );
-};
+}

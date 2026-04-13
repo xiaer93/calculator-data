@@ -4,16 +4,9 @@
 
 @layer base {
   * {
-    @apply box-border;
+    @apply border-gray-200;
   }
-
-  html {
-    @apply antialiased;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
   body {
-    @apply m-0 min-h-screen bg-gray-50 text-gray-900;
+    @apply bg-gray-50 text-gray-900;
   }
 }
