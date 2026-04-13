@@ -796,9 +796,9 @@ setResult() 更新 Context
 
 ### 设计原则
 
-**移动优先（Mobile First）**
-- 从最小屏幕（320px）开始设计
-- 逐步增强到平板（768px）和桌面（1024px+）
+**PC优先（Desktop First）**
+- 从PC端（1024px+）开始设计
+- 向下兼容到移动端（< 768px）
 - 确保核心功能在所有设备可用
 
 **断点系统**
@@ -808,15 +808,17 @@ setResult() 更新 Context
 export default {
   theme: {
     screens: {
-      'sm': '640px',   // 手机横屏
-      'md': '768px',   // 平板
-      'lg': '1024px',  // 桌面
-      'xl': '1280px',  // 大桌面
-      '2xl': '1536px', // 超大屏
+      // 默认（PC端）: ≥ 768px
+      'max-md': { max: '767px' },  // 移动端（max-width查询）
     },
   },
 };
 ```
+
+**使用原则**
+- 默认样式：PC端
+- `max-md:` 前缀：移动端样式
+- 示例：`className="text-base max-md:text-sm"`（PC端正常字，移动端小字）
 
 ### 响应式布局策略
 
@@ -827,9 +829,7 @@ export default {
 ┌─────────────────┐
 │  Header (汉堡菜单)│
 ├─────────────────┤
-│                 │
 │  标题 + 描述     │
-│                 │
 ├─────────────────┤
 │  表单（竖向）    │
 │  ┌───────────┐  │
@@ -841,36 +841,31 @@ export default {
 │  [计算按钮]     │
 ├─────────────────┤
 │  结果区域       │
-│  (横向滚动图表)  │
+│  (小尺寸图表)    │
 ├─────────────────┤
 │  内容章节       │
-│  (折叠式)       │
+│  (可折叠)       │
 └─────────────────┘
 ```
 
-**桌面端（≥ 1024px）**
+**PC端（≥ 768px）**
 ```
 ┌─────────────────────────────────────────┐
 │  Header (导航菜单)                       │
 ├─────────────────────────────────────────┤
-│                                         │
 │  标题 + 描述                             │
-│                                         │
 ├──────────────────┬──────────────────────┤
-│                  │                      │
-│  表单（左侧）     │  内容（右侧）        │
-│  ┌─────────┐     │  • 公式说明          │
-│  │ 字段1   │     │  • 使用指南          │
-│  ├─────────┤     │  • FAQ              │
+│  表单 + 结果      │  内容（右侧）        │
+│  （左侧）         │  • 公式说明          │
+│  ┌─────────┐     │  • 使用指南          │
+│  │ 字段1   │     │  • FAQ              │
+│  ├─────────┤     │                      │
 │  │ 字段2   │     │                      │
 │  └─────────┘     │                      │
 │  [计算]          │                      │
-│                  │                      │
-│  结果预览        │                      │
 │  ┌─────────┐     │                      │
 │  │ BMI: 22.9│    │                      │
 │  └─────────┘     │                      │
-│                  │                      │
 └──────────────────┴──────────────────────┘
 ```
 
@@ -900,9 +895,9 @@ export default function CalculatorPage({ params }) {
 
       {/* Main Content - 响应式网格 */}
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* 左侧：表单和结果 */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="md:col-span-1 space-y-6">
             {/* 计算器表单 */}
             <div className="bg-white rounded-lg shadow p-6">
               <CalculatorForm />
@@ -917,15 +912,15 @@ export default function CalculatorPage({ params }) {
           </div>
 
           {/* 右侧：内容章节 */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* 移动端：可折叠 */}
-            <div className="lg:hidden">
-              <Collapsible sections={contentSections} />
+          <div className="md:col-span-2 space-y-8">
+            {/* PC端：直接显示（默认） */}
+            <div className="max-md:hidden">
+              <ContentRenderer nodes={contentNodes} />
             </div>
 
-            {/* 桌面端：直接显示 */}
-            <div className="hidden lg:block">
-              <ContentRenderer nodes={contentNodes} />
+            {/* 移动端：可折叠 */}
+            <div className="hidden max-md:block">
+              <Collapsible sections={contentSections} />
             </div>
           </div>
         </div>
@@ -954,8 +949,8 @@ export function ResponsiveForm({ fields, onSubmit }) {
         <div key={field.name} className="space-y-2">
           <label
             className={cn(
-              "block text-sm font-medium",
-              "md:text-base"  // 桌面端字体稍大
+              "block text-base font-medium",
+              "max-md:text-sm"  // 移动端字体稍小
             )}
           >
             {field.label}
@@ -966,7 +961,7 @@ export function ResponsiveForm({ fields, onSubmit }) {
               className={cn(
                 "w-full px-3 py-2 border rounded-lg",
                 "focus:ring-2 focus:ring-blue-500",
-                "text-sm md:text-base"  // 响应式字体
+                "text-base max-md:text-sm"  // PC端正常，移动端小字
               )}
             >
               {field.options?.map((opt) => (
@@ -981,14 +976,14 @@ export function ResponsiveForm({ fields, onSubmit }) {
               className={cn(
                 "w-full px-3 py-2 border rounded-lg",
                 "focus:ring-2 focus:ring-blue-500",
-                "text-sm md:text-base"
+                "text-base max-md:text-sm"
               )}
               placeholder={field.placeholder}
             />
           )}
 
           {field.unit && (
-            <span className="text-xs md:text-sm text-gray-500">
+            <span className="text-sm max-md:text-xs text-gray-500">
               {field.unit}
             </span>
           )}
@@ -998,12 +993,11 @@ export function ResponsiveForm({ fields, onSubmit }) {
       <button
         type="submit"
         className={cn(
-          "w-full py-3 px-4 rounded-lg font-medium",
+          "w-auto py-3 px-8 rounded-lg font-medium",
           "bg-blue-600 text-white",
           "hover:bg-blue-700",
           "transition-colors",
-          "text-sm md:text-base",  // 响应式字体
-          "md:w-auto md:px-8"     // 桌面端宽度自适应
+          "text-base max-md:text-sm max-md:w-full"  // PC端自适应，移动端全宽
         )}
       >
         Calculate
@@ -1023,21 +1017,21 @@ import { GaugeChart } from '@/ui/components/GaugeChart';
 export function BMIChart({ value }) {
   return (
     <div className="w-full">
-      {/* 移动端：较小尺寸 */}
-      <div className="lg:hidden">
-        <GaugeChart
-          value={value}
-          size="small"        // 300px
-          showLabels={false}  // 省略标签
-        />
-      </div>
-
-      {/* 桌面端：较大尺寸 */}
-      <div className="hidden lg:block">
+      {/* PC端：大尺寸（默认） */}
+      <div className="max-md:hidden">
         <GaugeChart
           value={value}
           size="large"        // 500px
           showLabels={true}   // 显示标签
+        />
+      </div>
+
+      {/* 移动端：小尺寸 */}
+      <div className="hidden max-md:block">
+        <GaugeChart
+          value={value}
+          size="small"        // 300px
+          showLabels={false}  // 省略标签
         />
       </div>
     </div>
@@ -1052,7 +1046,7 @@ export function BMIChart({ value }) {
 
 export function ContentRenderer({ nodes }) {
   return (
-    <article className="prose prose-sm md:prose lg:prose-lg max-w-none">
+    <article className="prose prose-lg max-w-none max-md:prose-base">
       {nodes.map((node, index) => {
         if (node.type === 'markdown') {
           return (
@@ -1067,7 +1061,7 @@ export function ContentRenderer({ nodes }) {
         if (node.type === 'component') {
           const Component = node.component;
           return (
-            <div key={index} className="my-6 md:my-8">
+            <div key={index} className="my-8 max-md:my-6">
               <Component {...(node.props || {})} />
             </div>
           );
@@ -1096,8 +1090,8 @@ export function ContentRenderer({ nodes }) {
 </button>
 
 // 响应式间距
-<div className="space-y-2 md:space-y-4">
-  {/* 移动端间距小，桌面端间距大 */}
+<div className="space-y-4 max-md:space-y-2">
+  {/* PC端间距大，移动端间距小 */}
 </div>
 ```
 
@@ -1148,9 +1142,20 @@ test('BMI calculator on mobile', async ({ page }) => {
   await page.fill('input[name="weight"]', '70');
   await page.click('button[type="submit"]');
 
-  // 验证响应式布局
+  // 验证响应式布局（移动端）
   const form = page.locator('.calculator-form');
-  await expect(form).toHaveCSS('flex-direction', 'column');
+  await expect(form).toBeVisible();
+});
+
+test('BMI calculator on PC', async ({ page }) => {
+  // 模拟PC设备
+  await page.setViewportSize({ width: 1280, height: 720 });
+
+  await page.goto('/calculators/bmi-calculator');
+
+  // 验证PC端布局（双列）
+  const grid = page.locator('.grid');
+  await expect(grid).toHaveClass(/md:grid-cols-3/);
 });
 ```
 
