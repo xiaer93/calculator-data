@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  html {
+    @apply antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  /* Custom utility classes can be added here */
+}
+
+@layer utilities {
+  /* Custom utility functions can be added here */
+}
