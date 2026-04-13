@@ -2,7 +2,6 @@
   "name": "orange-calculator",
   "version": "1.0.0",
   "private": true,
-  "description": "AI-enhanced universal calculator platform",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
