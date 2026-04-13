@@ -16,6 +16,19 @@
     },
     "lint": {
       "outputs": []
+    },
+    "clean": {
+      "outputs": [".next", "dist", "*.log"]
+    },
+    "type-check": {
+      "dependsOn": ["build"],
+      "outputs": ["*.tsbuildinfo"]
+    },
+    "format": {
+      "outputs": []
+    },
+    "format:check": {
+      "outputs": []
     }
   }
 }
