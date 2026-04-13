@@ -40,62 +40,10 @@ export interface FormField {
   placeholder?: string;
   /** 帮助文本 */
   helpText?: string;
-  /** 字段验证规则 */
-  validation?: ValidationRule[];
-  /** 选择项（用于 select, radio, checkbox） */
-  options?: SelectOption[];
   /** 字段顺序 */
   order: number;
   /** 字段分组 */
   group?: string;
-}
-
-/**
- * 验证规则
- */
-export interface ValidationRule {
-  /** 规则类型 */
-  type: 'required' | 'min' | 'max' | 'pattern' | 'custom';
-  /** 验证值 */
-  value?: any;
-  /** 错误提示信息 */
-  message: string;
-  /** 自定义验证函数（仅用于 custom 类型） */
-  validator?: (value: any) => boolean;
-}
-
-/**
- * 选择项
- */
-export interface SelectOption {
-  /** 选项值 */
-  value: any;
-  /** 选项标签 */
-  label: string;
-  /** 是否禁用 */
-  disabled?: boolean;
-}
-
-/**
- * 验证结果
- */
-export interface ValidationResult {
-  /** 是否验证通过 */
-  valid: boolean;
-  /** 错误信息映射 */
-  errors: Record<string, string>;
-  /** 字段级验证结果 */
-  fieldResults: Record<string, FieldValidationResult>;
-}
-
-/**
- * 字段验证结果
- */
-export interface FieldValidationResult {
-  /** 是否验证通过 */
-  valid: boolean;
-  /** 错误信息 */
-  error?: string;
 }
 
 /**
@@ -128,50 +76,6 @@ export interface FormattedResult {
   secondary?: string[];
   /** 详细数据 */
   details?: Record<string, any>;
-  /** 图表数据（可选） */
-  chart?: ChartData;
-  /** 表格数据（可选） */
-  table?: TableData;
-}
-
-/**
- * 图表数据
- */
-export interface ChartData {
-  /** 图表类型 */
-  type: 'line' | 'bar' | 'pie' | 'scatter';
-  /** 数据系列 */
-  series: ChartSeries[];
-  /** X轴标签 */
-  xAxis?: string[];
-  /** Y轴标签 */
-  yAxis?: string[];
-  /** 图表标题 */
-  title?: string;
-}
-
-/**
- * 图表系列
- */
-export interface ChartSeries {
-  /** 系列名称 */
-  name: string;
-  /** 数据值 */
-  data: number[];
-  /** 颜色 */
-  color?: string;
-}
-
-/**
- * 表格数据
- */
-export interface TableData {
-  /** 表头 */
-  headers: string[];
-  /** 行数据 */
-  rows: (string | number)[][];
-  /** 表格标题 */
-  title?: string;
 }
 
 /**
@@ -180,8 +84,6 @@ export interface TableData {
 export interface CalculationLogic {
   /** 计算函数 */
   calculate: (inputs: Record<string, any>) => CalculationResult;
-  /** 输入验证函数 */
-  validate?: (inputs: Record<string, any>) => ValidationResult;
   /** 结果格式化函数 */
   format?: (result: CalculationResult) => FormattedResult;
 }
@@ -223,38 +125,6 @@ export interface DataNode {
 }
 
 /**
- * UI 配置
- */
-export interface UIConfig {
-  /** 主题配置 */
-  theme?: ThemeConfig;
-  /** 卡片视图配置 */
-  cardView?: CardView;
-  /** 响应式断点 */
-  breakpoints?: Record<string, number>;
-  /** 动画配置 */
-  animation?: AnimationConfig;
-}
-
-/**
- * 主题配置
- */
-export interface ThemeConfig {
-  /** 主色调 */
-  primaryColor?: string;
-  /** 次要色调 */
-  secondaryColor?: string;
-  /** 背景色 */
-  backgroundColor?: string;
-  /** 文字颜色 */
-  textColor?: string;
-  /** 边框颜色 */
-  borderColor?: string;
-  /** 圆角大小 */
-  borderRadius?: string;
-}
-
-/**
  * 卡片视图
  */
 export interface CardView {
@@ -274,18 +144,6 @@ export interface CardView {
   usageCount?: number;
   /** 评分 */
   rating?: number;
-}
-
-/**
- * 动画配置
- */
-export interface AnimationConfig {
-  /** 是否启用动画 */
-  enabled?: boolean;
-  /** 动画时长（毫秒） */
-  duration?: number;
-  /** 缓动函数 */
-  easing?: string;
 }
 
 /**
@@ -316,18 +174,7 @@ export interface LLMConfig {
   temperature?: number;
   /** 最大 tokens */
   maxTokens?: number;
-  /** 采样策略 */
-  topP?: number;
-  /** 频率惩罚 */
-  frequencyPenalty?: number;
-  /** 存在惩罚 */
-  presencePenalty?: number;
 }
-
-/**
- * 地区变体
- */
-export type RegionVariant = 'CN' | 'US' | 'EU' | 'JP' | 'KR';
 
 /**
  * 国际化配置
@@ -337,16 +184,8 @@ export interface I18nConfig {
   defaultLocale: string;
   /** 支持的语言列表 */
   locales: string[];
-  /** 地区变体 */
-  regionVariant?: RegionVariant;
   /** 翻译资源 */
   translations?: Record<string, Record<string, string>>;
-  /** 日期格式 */
-  dateFormat?: string;
-  /** 数字格式 */
-  numberFormat?: string;
-  /** 货币代码 */
-  currency?: string;
 }
 
 /**
@@ -358,51 +197,17 @@ export interface ContentConfig {
   /** 使用说明 */
   instructions?: ContentNode[];
   /** 常见问题 */
-  faq?: FAQItem[];
+  faq?: Array<{
+    question: string;
+    answer: string;
+  }>;
   /** 示例 */
-  examples?: Example[];
-  /** 相关资源 */
-  resources?: Resource[];
-}
-
-/**
- * FAQ 项
- */
-export interface FAQItem {
-  /** 问题 */
-  question: string;
-  /** 答案 */
-  answer: string;
-  /** 分类 */
-  category?: string;
-}
-
-/**
- * 示例
- */
-export interface Example {
-  /** 示例标题 */
-  title: string;
-  /** 示例描述 */
-  description?: string;
-  /** 输入数据 */
-  inputs: Record<string, any>;
-  /** 预期输出 */
-  outputs: Record<string, any>;
-}
-
-/**
- * 资源
- */
-export interface Resource {
-  /** 资源标题 */
-  title: string;
-  /** 资源 URL */
-  url: string;
-  /** 资源类型 */
-  type: 'article' | 'video' | 'documentation' | 'tool';
-  /** 资源描述 */
-  description?: string;
+  examples?: Array<{
+    title: string;
+    description?: string;
+    inputs: Record<string, any>;
+    outputs: Record<string, any>;
+  }>;
 }
 
 /**
@@ -427,8 +232,6 @@ export interface CalculatorMetadata {
   status: 'draft' | 'published' | 'archived';
   /** 来源 URL（爬取来源） */
   sourceUrl?: string;
-  /** 许可证 */
-  license?: string;
 }
 
 /**
@@ -442,7 +245,10 @@ export interface CalculatorProtocol {
   /** 计算逻辑 */
   calculation: CalculationLogic;
   /** UI 配置 */
-  ui?: UIConfig;
+  ui?: {
+    /** 卡片视图配置 */
+    cardView?: CardView;
+  };
   /** SEO 配置 */
   seo?: SEOConfig;
   /** LLM 配置 */
@@ -451,6 +257,4 @@ export interface CalculatorProtocol {
   i18n?: I18nConfig;
   /** 内容配置 */
   content?: ContentConfig;
-  /** 扩展数据 */
-  extensions?: Record<string, any>;
 }
