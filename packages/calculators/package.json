@@ -2,9 +2,18 @@
   "name": "@orange-calculator/calculators",
   "version": "1.0.0",
   "private": true,
-  "description": "Calculator implementations and visualization components",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./bmi-calculator/protocol": {
+      "types": "./dist/bmi-calculator/protocol.d.ts",
+      "import": "./dist/bmi-calculator/protocol.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -13,8 +22,8 @@
   "dependencies": {
     "@orange-calculator/shared": "workspace:*",
     "@orange-calculator/ui": "workspace:*",
-    "react": "^18.3.1",
-    "recharts": "^2.15.0"
+    "react": "^18.2.0",
+    "recharts": "^2.10.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

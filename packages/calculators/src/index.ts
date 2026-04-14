@@ -4,8 +4,7 @@
  * Calculator implementations and visualization components
  */
 
-// Types will be exported here
-// Calculator components will be exported here
-// Visualization components will be exported here
+export * from './bmi-calculator/protocol';
 
-export {};
+// 未来添加更多计算器
+
