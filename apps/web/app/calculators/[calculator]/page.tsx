@@ -26,11 +26,11 @@ export async function generateMetadata({ params }: CalculatorPageProps) {
   }
 
   return {
-    title: protocol.seo?.title || protocol.name,
+    title: protocol.seo?.title || protocol.metadata.name,
     description: protocol.seo?.description,
     keywords: protocol.seo?.keywords?.join(', '),
     openGraph: {
-      title: protocol.seo?.title || protocol.name,
+      title: protocol.seo?.title || protocol.metadata.name,
       description: protocol.seo?.description,
       images: protocol.seo?.ogImage ? [{ url: protocol.seo.ogImage }] : undefined,
     },
@@ -53,13 +53,23 @@ export default async function CalculatorPage({ params }: CalculatorPageProps) {
         category: protocol.metadata.category,
         inputSchema: protocol.formFields.map((field) => ({
           name: field.name,
-          type: field.type,
-          required: field.required,
+          type: field.type as 'number' | 'boolean' | 'select' | 'text',
+          required: field.required ?? false,
           options: field.type === 'select' ? [] : undefined,
           defaultValue: field.defaultValue,
         })),
         calculation: {
-          validate: protocol.calculation.validate,
+          validate: (inputs) => {
+            const result = protocol.calculation.validate(inputs)
+            return {
+              valid: result.valid,
+              errors: result.errors.reduce((acc, error) => {
+                const key = error.includes('Height') ? 'height' : error.includes('Weight') ? 'weight' : 'general'
+                acc[key] = error
+                return acc
+              }, {} as Record<string, string>),
+            }
+          },
           calculate: async (inputs) => {
             return protocol.calculation.calculate(inputs)
           },
@@ -70,7 +80,7 @@ export default async function CalculatorPage({ params }: CalculatorPageProps) {
         <div className="max-w-2xl mx-auto">
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {protocol.ui?.cardView?.title || protocol.name}
+              {protocol.ui?.cardView?.title || protocol.metadata.name}
             </h1>
             <p className="text-gray-600">
               {protocol.ui?.cardView?.description}

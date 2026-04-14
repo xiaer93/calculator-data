@@ -1,0 +1,289 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Calculator.net" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - img "Calculator.net" [ref=e6]
+    - link "sign in" [ref=e8] [cursor=pointer]:
+      - /url: /my-account/sign-in.php
+  - table [ref=e11]:
+    - rowgroup [ref=e12]:
+      - row "0 sin cos tan Deg Rad sin-1 cos-1 tan-1 π e xy x3 x2 ex 10x y√x 3√x √x ln log ( ) 1/x % n! 7 8 9 + Back 4 5 6 – Ans 1 2 3 × M+ 0 . EXP / M- ± RND AC = MR Free Online Calculators Search" [ref=e13]:
+        - cell "0 sin cos tan Deg Rad sin-1 cos-1 tan-1 π e xy x3 x2 ex 10x y√x 3√x √x ln log ( ) 1/x % n! 7 8 9 + Back 4 5 6 – Ans 1 2 3 × M+ 0 . EXP / M- ± RND AC = MR" [ref=e14]:
+          - table [ref=e15]:
+            - rowgroup [ref=e16]:
+              - row "0" [ref=e17]:
+                - cell "0" [ref=e18]:
+                  - generic [ref=e21]: "0"
+              - row "sin cos tan Deg Rad sin-1 cos-1 tan-1 π e xy x3 x2 ex 10x y√x 3√x √x ln log ( ) 1/x % n! 7 8 9 + Back 4 5 6 – Ans 1 2 3 × M+ 0 . EXP / M- ± RND AC = MR" [ref=e22]:
+                - cell "sin cos tan Deg Rad sin-1 cos-1 tan-1 π e xy x3 x2 ex 10x y√x 3√x √x ln log ( ) 1/x % n!" [ref=e23]:
+                  - generic [ref=e24]:
+                    - generic [ref=e25]:
+                      - generic [ref=e26]: sin
+                      - generic [ref=e27]: cos
+                      - generic [ref=e28]: tan
+                      - generic [ref=e29]:
+                        - generic [ref=e30]:
+                          - radio "Deg" [checked] [ref=e31]
+                          - text: Deg
+                        - generic [ref=e32]:
+                          - radio "Rad" [ref=e33]
+                          - text: Rad
+                    - generic [ref=e34]:
+                      - generic [ref=e35]:
+                        - text: sin
+                        - superscript [ref=e36]: "-1"
+                      - generic [ref=e37]:
+                        - text: cos
+                        - superscript [ref=e38]: "-1"
+                      - generic [ref=e39]:
+                        - text: tan
+                        - superscript [ref=e40]: "-1"
+                      - generic [ref=e41]: π
+                      - generic [ref=e42]: e
+                    - generic [ref=e43]:
+                      - generic [ref=e44]:
+                        - text: x
+                        - superscript [ref=e45]: "y"
+                      - generic [ref=e46]:
+                        - text: x
+                        - superscript [ref=e47]: "3"
+                      - generic [ref=e48]:
+                        - text: x
+                        - superscript [ref=e49]: "2"
+                      - generic [ref=e50]:
+                        - text: e
+                        - superscript [ref=e51]: x
+                      - generic [ref=e52]:
+                        - text: "10"
+                        - superscript [ref=e53]: x
+                    - generic [ref=e54]:
+                      - generic [ref=e55]:
+                        - superscript [ref=e56]: "y"
+                        - text: √x
+                      - generic [ref=e57]:
+                        - superscript [ref=e58]: "3"
+                        - text: √x
+                      - generic [ref=e59]: √x
+                      - generic [ref=e60]: ln
+                      - generic [ref=e61]: log
+                    - generic [ref=e62]:
+                      - generic [ref=e63]: (
+                      - generic [ref=e64]: )
+                      - generic [ref=e65]: 1/x
+                      - generic [ref=e66]: "%"
+                      - generic [ref=e67]: n!
+                - cell "7 8 9 + Back 4 5 6 – Ans 1 2 3 × M+ 0 . EXP / M- ± RND AC = MR" [ref=e68]:
+                  - generic [ref=e69]:
+                    - generic [ref=e70]:
+                      - generic [ref=e71]: "7"
+                      - generic [ref=e72]: "8"
+                      - generic [ref=e73]: "9"
+                      - generic [ref=e74]: +
+                      - generic [ref=e75]: Back
+                    - generic [ref=e76]:
+                      - generic [ref=e77]: "4"
+                      - generic [ref=e78]: "5"
+                      - generic [ref=e79]: "6"
+                      - generic [ref=e80]: –
+                      - generic [ref=e81]: Ans
+                    - generic [ref=e82]:
+                      - generic [ref=e83]: "1"
+                      - generic [ref=e84]: "2"
+                      - generic [ref=e85]: "3"
+                      - generic [ref=e86]: ×
+                      - generic [ref=e87]: M+
+                    - generic [ref=e88]:
+                      - generic [ref=e89]: "0"
+                      - generic [ref=e90]: .
+                      - generic [ref=e91]: EXP
+                      - generic [ref=e92]: /
+                      - generic [ref=e93]: M-
+                    - generic [ref=e94]:
+                      - generic [ref=e95]: ±
+                      - generic [ref=e96]: RND
+                      - generic [ref=e97]: AC
+                      - generic [ref=e98]: =
+                      - generic [ref=e99]: MR
+              - row:
+                - cell
+        - cell "Free Online Calculators Search" [ref=e100]:
+          - heading "Free Online Calculators" [level=1] [ref=e101]
+          - table [ref=e103]:
+            - rowgroup [ref=e104]:
+              - row "Search" [ref=e105]:
+                - cell [ref=e106]:
+                  - textbox [ref=e107]
+                - cell "Search" [ref=e108]
+              - row [ref=e109]:
+                - cell [ref=e110]
+  - generic [ref=e113]:
+    - generic [ref=e114]:
+      - generic [ref=e115]:
+        - link "Financial Calculators" [ref=e117] [cursor=pointer]:
+          - /url: /financial-calculator.html
+          - img "Financial Calculators" [ref=e118]
+        - link "Financial Calculators" [ref=e120] [cursor=pointer]:
+          - /url: /financial-calculator.html
+        - list [ref=e121]:
+          - listitem [ref=e122]:
+            - link "Mortgage Calculator" [ref=e123] [cursor=pointer]:
+              - /url: /mortgage-calculator.html
+          - listitem [ref=e124]:
+            - link "Loan Calculator" [ref=e125] [cursor=pointer]:
+              - /url: /loan-calculator.html
+          - listitem [ref=e126]:
+            - link "Auto Loan Calculator" [ref=e127] [cursor=pointer]:
+              - /url: /auto-loan-calculator.html
+          - listitem [ref=e128]:
+            - link "Interest Calculator" [ref=e129] [cursor=pointer]:
+              - /url: /interest-calculator.html
+          - listitem [ref=e130]:
+            - link "Payment Calculator" [ref=e131] [cursor=pointer]:
+              - /url: /payment-calculator.html
+          - listitem [ref=e132]:
+            - link "Retirement Calculator" [ref=e133] [cursor=pointer]:
+              - /url: /retirement-calculator.html
+          - listitem [ref=e134]:
+            - link "Amortization Calculator" [ref=e135] [cursor=pointer]:
+              - /url: /amortization-calculator.html
+          - listitem [ref=e136]:
+            - link "Investment Calculator" [ref=e137] [cursor=pointer]:
+              - /url: /investment-calculator.html
+          - listitem [ref=e138]:
+            - link "Inflation Calculator" [ref=e139] [cursor=pointer]:
+              - /url: /inflation-calculator.html
+          - listitem [ref=e140]:
+            - link "Finance Calculator" [ref=e141] [cursor=pointer]:
+              - /url: /finance-calculator.html
+          - listitem [ref=e142]:
+            - link "Income Tax Calculator" [ref=e143] [cursor=pointer]:
+              - /url: /tax-calculator.html
+          - listitem [ref=e144]:
+            - link "Compound Interest Calculator" [ref=e145] [cursor=pointer]:
+              - /url: /compound-interest-calculator.html
+          - listitem [ref=e146]:
+            - link "Salary Calculator" [ref=e147] [cursor=pointer]:
+              - /url: /salary-calculator.html
+          - listitem [ref=e148]:
+            - link "Interest Rate Calculator" [ref=e149] [cursor=pointer]:
+              - /url: /interest-rate-calculator.html
+          - listitem [ref=e150]:
+            - link "Sales Tax Calculator" [ref=e151] [cursor=pointer]:
+              - /url: /sales-tax-calculator.html
+      - generic [ref=e152]:
+        - link "Fitness & Health Calculators" [ref=e154] [cursor=pointer]:
+          - /url: /fitness-and-health-calculator.html
+          - img "Fitness & Health Calculators" [ref=e155]
+        - link "Fitness & Health Calculators" [ref=e157] [cursor=pointer]:
+          - /url: /fitness-and-health-calculator.html
+        - list [ref=e158]:
+          - listitem [ref=e159]:
+            - link "BMI Calculator" [ref=e160] [cursor=pointer]:
+              - /url: /bmi-calculator.html
+          - listitem [ref=e161]:
+            - link "Calorie Calculator" [ref=e162] [cursor=pointer]:
+              - /url: /calorie-calculator.html
+          - listitem [ref=e163]:
+            - link "Body Fat Calculator" [ref=e164] [cursor=pointer]:
+              - /url: /body-fat-calculator.html
+          - listitem [ref=e165]:
+            - link "BMR Calculator" [ref=e166] [cursor=pointer]:
+              - /url: /bmr-calculator.html
+          - listitem [ref=e167]:
+            - link "Ideal Weight Calculator" [ref=e168] [cursor=pointer]:
+              - /url: /ideal-weight-calculator.html
+          - listitem [ref=e169]:
+            - link "Pace Calculator" [ref=e170] [cursor=pointer]:
+              - /url: /pace-calculator.html
+          - listitem [ref=e171]:
+            - link "Pregnancy Calculator" [ref=e172] [cursor=pointer]:
+              - /url: /pregnancy-calculator.html
+          - listitem [ref=e173]:
+            - link "Pregnancy Conception Calculator" [ref=e174] [cursor=pointer]:
+              - /url: /pregnancy-conception-calculator.html
+          - listitem [ref=e175]:
+            - link "Due Date Calculator" [ref=e176] [cursor=pointer]:
+              - /url: /due-date-calculator.html
+      - generic [ref=e177]:
+        - link "Math Calculators" [ref=e179] [cursor=pointer]:
+          - /url: /math-calculator.html
+          - img "Math Calculators" [ref=e180]
+        - link "Math Calculators" [ref=e182] [cursor=pointer]:
+          - /url: /math-calculator.html
+        - list [ref=e183]:
+          - listitem [ref=e184]:
+            - link "Scientific Calculator" [ref=e185] [cursor=pointer]:
+              - /url: /scientific-calculator.html
+          - listitem [ref=e186]:
+            - link "Fraction Calculator" [ref=e187] [cursor=pointer]:
+              - /url: /fraction-calculator.html
+          - listitem [ref=e188]:
+            - link "Percentage Calculator" [ref=e189] [cursor=pointer]:
+              - /url: /percent-calculator.html
+          - listitem [ref=e190]:
+            - link "Random Number Generator" [ref=e191] [cursor=pointer]:
+              - /url: /random-number-generator.html
+          - listitem [ref=e192]:
+            - link "Triangle Calculator" [ref=e193] [cursor=pointer]:
+              - /url: /triangle-calculator.html
+          - listitem [ref=e194]:
+            - link "Standard Deviation Calculator" [ref=e195] [cursor=pointer]:
+              - /url: /standard-deviation-calculator.html
+      - generic [ref=e196]:
+        - link "Other Calculators" [ref=e198] [cursor=pointer]:
+          - /url: /other-calculator.html
+          - img "Other Calculators" [ref=e199]
+        - link "Other Calculators" [ref=e201] [cursor=pointer]:
+          - /url: /other-calculator.html
+        - list [ref=e202]:
+          - listitem [ref=e203]:
+            - link "Age Calculator" [ref=e204] [cursor=pointer]:
+              - /url: /age-calculator.html
+          - listitem [ref=e205]:
+            - link "Date Calculator" [ref=e206] [cursor=pointer]:
+              - /url: /date-calculator.html
+          - listitem [ref=e207]:
+            - link "Time Calculator" [ref=e208] [cursor=pointer]:
+              - /url: /time-calculator.html
+          - listitem [ref=e209]:
+            - link "Hours Calculator" [ref=e210] [cursor=pointer]:
+              - /url: /hours-calculator.html
+          - listitem [ref=e211]:
+            - link "GPA Calculator" [ref=e212] [cursor=pointer]:
+              - /url: /gpa-calculator.html
+          - listitem [ref=e213]:
+            - link "Grade Calculator" [ref=e214] [cursor=pointer]:
+              - /url: /grade-calculator.html
+          - listitem [ref=e215]:
+            - link "Concrete Calculator" [ref=e216] [cursor=pointer]:
+              - /url: /concrete-calculator.html
+          - listitem [ref=e217]:
+            - link "Subnet Calculator" [ref=e218] [cursor=pointer]:
+              - /url: /ip-subnet-calculator.html
+          - listitem [ref=e219]:
+            - link "Password Generator" [ref=e220] [cursor=pointer]:
+              - /url: /password-generator.html
+          - listitem [ref=e221]:
+            - link "Conversion Calculator" [ref=e222] [cursor=pointer]:
+              - /url: /conversion-calculator.html
+    - link "All Calculators" [ref=e224] [cursor=pointer]:
+      - /url: /sitemap.html
+      - img "All Calculators" [ref=e225]
+  - generic [ref=e227]:
+    - text: Calculator.net's sole focus is to provide fast, comprehensive, convenient, free online calculators in a plethora of areas. Currently, we have around 200 calculators to help you "do the math" quickly in areas such as finance, fitness, health, math, and others, and we are still developing more. Our goal is to become the one-stop, go-to site for people who need to make quick calculations. Additionally, we believe the internet should be a source of free information. Therefore, all of our tools and services are completely free, with no registration required.
+    - text: We coded and developed each calculator individually and put each one through strict, comprehensive testing. However, please inform us if you notice even the slightest error – your input is extremely valuable to us. While most calculators on Calculator.net are designed to be universally applicable for worldwide usage, some are for specific countries only. For example, the Income Tax Calculator is for United States residents only.
+    - generic [ref=e228]:
+      - link "about us" [ref=e229] [cursor=pointer]:
+        - /url: /about-us.html
+      - text: "|"
+      - link "sitemap" [ref=e230] [cursor=pointer]:
+        - /url: /sitemap.html
+      - text: "|"
+      - link "terms of use" [ref=e231] [cursor=pointer]:
+        - /url: /about-us.html#terms
+      - text: "|"
+      - link "privacy policy" [ref=e232] [cursor=pointer]:
+        - /url: /about-us.html#privacy
+      - text: © 2008 - 2026
+      - link "calculator.net" [ref=e233] [cursor=pointer]:
+        - /url: //www.calculator.net

@@ -26,7 +26,7 @@ export function BMICalculatorForm() {
         type="number"
         placeholder="175"
         value={inputs.height || ''}
-        onChange={(e) => handleInputChange('height', e.target.value)}
+        onChange={(e) => handleInputChange('height', (e.target as HTMLInputElement).value)}
         min={100}
         max={250}
         required

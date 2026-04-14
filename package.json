@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "prettier": "^3.1.1",
     "turbo": "^1.11.0",
     "typescript": "^5.3.3"
