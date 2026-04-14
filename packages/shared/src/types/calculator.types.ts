@@ -47,45 +47,51 @@ export interface FormField {
 }
 
 /**
+ * 验证结果
+ */
+export interface ValidationResult {
+  /** 是否有效 */
+  valid: boolean;
+  /** 错误信息列表 */
+  errors: string[];
+}
+
+/**
  * 计算结果
  */
 export interface CalculationResult {
-  /** 结果数据 */
-  data: Record<string, any>;
-  /** 结果类型 */
-  type: 'single' | 'multiple' | 'table' | 'chart';
-  /** 结果标签 */
-  labels?: Record<string, string>;
-  /** 单位 */
-  unit?: string;
-  /** 小数位数 */
-  decimals?: number;
-  /** 结果精度 */
-  precision?: number;
-  /** 时间戳 */
-  timestamp: number;
+  /** 动态结果数据 */
+  [key: string]: any;
 }
 
 /**
  * 格式化结果
  */
 export interface FormattedResult {
-  /** 主要结果显示 */
-  primary: string;
-  /** 次要结果 */
-  secondary?: string[];
-  /** 详细数据 */
-  details?: Record<string, any>;
+  /** 结果标题 */
+  title: string;
+  /** 结果值 */
+  value: string | number;
+  /** 单位 */
+  unit?: string;
+  /** 分类 */
+  category?: string;
+  /** 颜色 */
+  color?: string;
+  /** 摘要 */
+  summary: string;
 }
 
 /**
  * 计算逻辑接口
  */
 export interface CalculationLogic {
-  /** 计算函数 */
+  /** 参数验证函数 */
+  validate: (inputs: Record<string, any>) => ValidationResult;
+  /** 核心计算函数 */
   calculate: (inputs: Record<string, any>) => CalculationResult;
   /** 结果格式化函数 */
-  format?: (result: CalculationResult) => FormattedResult;
+  format: (result: CalculationResult) => FormattedResult;
 }
 
 /**
