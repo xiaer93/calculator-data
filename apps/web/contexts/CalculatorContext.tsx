@@ -2,63 +2,41 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 
-export interface CalculatorInputs {
-  [key: string]: string | number | boolean
-}
-
-export interface CalculatorResult {
-  [key: string]: any
-}
-
-export interface CalculatorProtocol {
-  id: string
-  name: string
-  category: string
-  calculate: (inputs: CalculatorInputs) => Promise<CalculatorResult>
-  inputSchema: {
-    name: string
-    type: 'text' | 'number' | 'boolean' | 'select'
-    required: boolean
-    options?: string[]
-    defaultValue?: any
-  }[]
-}
-
-interface CalculatorContextType {
-  inputs: CalculatorInputs
-  result: CalculatorResult | null
+interface CalculatorContextValue {
+  inputs: Record<string, any>
+  result: Record<string, any> | null
   loading: boolean
   error: string | null
-  setInputs: (inputs: CalculatorInputs | ((prev: CalculatorInputs) => CalculatorInputs)) => void
+  setInputs: (inputs: Record<string, any>) => void
   calculate: () => Promise<void>
   reset: () => void
 }
 
-const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined)
+const CalculatorContext = createContext<CalculatorContextValue | undefined>(undefined)
 
 interface CalculatorProviderProps {
   children: ReactNode
-  calculator: CalculatorProtocol
+  calculator: {
+    id: string
+    name: string
+    category: string
+    calculation: {
+      validate: (inputs: Record<string, any>) => { valid: boolean; errors: Record<string, string> }
+      calculate: (inputs: Record<string, any>) => Promise<Record<string, any>>
+    }
+    inputSchema: {
+      name: string
+      type: 'text' | 'number' | 'boolean' | 'select'
+      required: boolean
+      options?: string[]
+      defaultValue?: any
+    }[]
+  }
 }
 
 export function CalculatorProvider({ children, calculator }: CalculatorProviderProps) {
-  const [inputs, setInputs] = useState<CalculatorInputs>(() => {
-    const initialInputs: CalculatorInputs = {}
-    calculator.inputSchema.forEach(field => {
-      if (field.defaultValue !== undefined) {
-        initialInputs[field.name] = field.defaultValue
-      } else if (field.type === 'boolean') {
-        initialInputs[field.name] = false
-      } else if (field.type === 'number') {
-        initialInputs[field.name] = 0
-      } else {
-        initialInputs[field.name] = ''
-      }
-    })
-    return initialInputs
-  })
-
-  const [result, setResult] = useState<CalculatorResult | null>(null)
+  const [inputs, setInputs] = useState<Record<string, any>>({})
+  const [result, setResult] = useState<Record<string, any> | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -67,7 +45,19 @@ export function CalculatorProvider({ children, calculator }: CalculatorProviderP
     setError(null)
 
     try {
-      const calculationResult = await calculator.calculate(inputs)
+      // Validate inputs
+      const validation = calculator.calculation.validate(inputs)
+      if (!validation.valid) {
+        const errorMessages = Object.values(validation.errors).join(', ')
+        setError(errorMessages)
+        return
+      }
+
+      // Simulate 300ms processing delay
+      await new Promise(resolve => setTimeout(resolve, 300))
+
+      // Perform calculation
+      const calculationResult = await calculator.calculation.calculate(inputs)
       setResult(calculationResult)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '计算失败，请重试'
@@ -79,24 +69,12 @@ export function CalculatorProvider({ children, calculator }: CalculatorProviderP
   }, [calculator, inputs])
 
   const reset = useCallback(() => {
-    const initialInputs: CalculatorInputs = {}
-    calculator.inputSchema.forEach(field => {
-      if (field.defaultValue !== undefined) {
-        initialInputs[field.name] = field.defaultValue
-      } else if (field.type === 'boolean') {
-        initialInputs[field.name] = false
-      } else if (field.type === 'number') {
-        initialInputs[field.name] = 0
-      } else {
-        initialInputs[field.name] = ''
-      }
-    })
-    setInputs(initialInputs)
+    setInputs({})
     setResult(null)
     setError(null)
-  }, [calculator])
+  }, [])
 
-  const value: CalculatorContextType = {
+  const value: CalculatorContextValue = {
     inputs,
     result,
     loading,
