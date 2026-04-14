@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { CalculatorProvider } from '../../../contexts/CalculatorContext'
 import { BMICalculatorForm } from '../../../components/BMICalculatorForm'
 import { BMIResult } from '../../../components/BMIResult'
+import { ContentRenderer } from '../../../components/ContentRenderer'
 import { bmiCalculatorProtocol } from '@orange-calculator/calculators'
 
 const calculators = {
@@ -82,6 +83,15 @@ export default async function CalculatorPage({ params }: CalculatorPageProps) {
               <BMIResult />
             </div>
           </div>
+
+          {protocol.content?.introduction && (
+            <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                About This Calculator
+              </h2>
+              <ContentRenderer nodes={protocol.content.introduction} />
+            </div>
+          )}
         </div>
       </div>
     </CalculatorProvider>
