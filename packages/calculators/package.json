@@ -1,0 +1,23 @@
+{
+  "name": "@orange-calculator/calculators",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculator implementations and visualization components",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@orange-calculator/shared": "workspace:*",
+    "@orange-calculator/ui": "workspace:*",
+    "react": "^18.3.1",
+    "recharts": "^2.15.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "typescript": "^5.7.3"
+  }
+}
